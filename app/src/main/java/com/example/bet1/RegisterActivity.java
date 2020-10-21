@@ -1,13 +1,19 @@
 package com.example.bet1;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -23,15 +29,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Calendar;
 import java.util.HashMap;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
+
 public class RegisterActivity extends AppCompatActivity {
     private EditText username;
     private EditText name;
     private EditText email;
     private EditText password;
     private Button register;
+    private Button pickdate;
     private TextView loginUser;
     String isMother = "Not a Mother";
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
 
 
     private DatabaseReference mRootRef;
@@ -54,6 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
         register =findViewById(R.id.register);
         loginUser = findViewById(R.id.login_user);
         radioGroup = findViewById(R.id.radioGroup);
+        pickdate = findViewById(R.id.pickdate);
 
 
         mRootRef = FirebaseDatabase.getInstance().getReference();
@@ -67,6 +80,36 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
             }
         });
+
+        //Date picker dialog
+
+        pickdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        RegisterActivity.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        mDateSetListener,
+                        year,month,day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
+                String date = month + "/" + day + "/" + year;
+                //holder.date_guess.setText(date);
+
+            }
+        };
 
 
 
