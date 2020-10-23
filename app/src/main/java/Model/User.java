@@ -1,26 +1,26 @@
 package Model;
 public class User {
 
+    private String isMother;
     private String name;
     private String email;
     private String username;
     private String bio;
     private String imageurl;
     private String id;
-    private String ismother;
     private String Guessed_date;
 
     public User() {
     }
 
-    public User(String name, String email, String username, String bio, String imageurl, String id,String ismother,String date) {
+    public User(String name, String email, String username, String bio, String imageurl, String id,String isMother,String date) {
         this.name = name;
         this.email = email;
         this.username = username;
         this.bio = bio;
         this.imageurl = imageurl;
         this.id = id;
-        this.ismother = ismother;
+        this.isMother = isMother;
     }
 
     public String getName() {
@@ -69,9 +69,11 @@ public class User {
     public String getId() {
         return id;
     }
-    public String getMother() {
-        return ismother;
+    public String getIsMother() {
+        return isMother;
     }
+    public void setIsMother(String isMother) { this.isMother = isMother;}
+
 
     public void setId(String id) {
         this.id = id;

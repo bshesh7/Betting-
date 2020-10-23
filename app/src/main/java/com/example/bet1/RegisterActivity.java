@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -43,8 +44,9 @@ public class RegisterActivity extends AppCompatActivity {
     private Button pickdate;
     private TextView loginUser;
     String isMother = "Not a Mother";
-    private DatePickerDialog.OnDateSetListener mDateSetListener;
 
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
+    String date;
 
     private DatabaseReference mRootRef;
     private FirebaseAuth mAuth;
@@ -58,7 +60,6 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         username = findViewById(R.id.username);
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
@@ -105,9 +106,8 @@ public class RegisterActivity extends AppCompatActivity {
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
                 Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
-                String date = month + "/" + day + "/" + year;
+                date = month + "/" + day + "/" + year;
                 //holder.date_guess.setText(date);
-
             }
         };
 
@@ -148,6 +148,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                         if(isMother.equals("Mother")){
                             mRootRef.child("Mother").child(mAuth.getCurrentUser().getUid()).setValue(map);
+                            FirebaseDatabase.getInstance().getReference().child("Date").
+                                    child(mAuth.getCurrentUser().getUid()).setValue(date);
+
                         }
 
                         mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -183,5 +186,11 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(this, "Selected Radio Button: " + radioButton.getText(),
                 Toast.LENGTH_SHORT).show();
         isMother = (String) radioButton.getText();
+        if(isMother.equals("Mother")){
+            pickdate.setVisibility(View.VISIBLE);
+        }else if(isMother.equals("Not a Mother"))
+        {
+            pickdate.setVisibility(View.GONE);
+        }
     }
 }

@@ -87,7 +87,8 @@
         android:layout_marginTop="15dp"
         android:text="Enter your delievery date"
         android:padding="10dp"
-        android:id="@+id/pickdate"/>
+        android:id="@+id/pickdate"
+        android:visibility="gone"/>
 
     <Button
         android:layout_width="match_parent"

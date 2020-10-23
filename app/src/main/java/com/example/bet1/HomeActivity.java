@@ -37,6 +37,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -47,6 +48,8 @@ public class HomeActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mUsers.clear();
+                userAdapter.notifyDataSetChanged();
                 startActivity(new Intent(HomeActivity.this,SearchActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
@@ -61,34 +64,37 @@ public class HomeActivity extends AppCompatActivity {
         readUsers();
     }
     private void readUsers(){
+        mUsers.clear();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Follow").child((firebaseUser.getUid())).child("following");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                        Log.i(snapshot.getKey().toString(),"fukuyouuu");
-                        String gg = snapshot.getKey().toString();
-                        Query query = FirebaseDatabase.getInstance().getReference().child("Mother")
-                                .orderByChild("username").startAt(gg);
-                        query.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                mUsers.clear();
-                                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                                    User user = snapshot.getValue(User.class);
-                                    mUsers.add(user);
-                                }
-                                userAdapter.notifyDataSetChanged();
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-                            }
-                        });
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    Log.i(snapshot.getKey().toString(),"fukuyouuu");
+                    String gg = snapshot.getKey().toString();
+                    searchUser(gg);
+                }
 
-                    }
-                    userAdapter.notifyDataSetChanged();
             }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void searchUser(String s){
+        Query query = FirebaseDatabase.getInstance().getReference().child("Mother")
+                .orderByChild("id").startAt(s).endAt(s + "\uf8ff" );
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()){
+                    User user = snapshot.getValue(User.class);
+                    mUsers.add(user);
+                }
+                userAdapter.notifyDataSetChanged();
+            }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
