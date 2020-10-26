@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bet1.MotherProfile;
 import com.example.bet1.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -82,6 +83,21 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
 
                     FirebaseDatabase.getInstance().getReference().child("Follow").
                             child(user.getId()).child("followers").child(firebaseUser.getUid()).removeValue();
+                }
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isFargment) {
+                    Intent intent = new Intent(mContext, MotherProfile.class);
+                    intent.putExtra("publisherId", user.getId());
+                    mContext.startActivity(intent);
+                } else {
+                    Intent intent = new Intent(mContext, MotherProfile.class);
+                    intent.putExtra("publisherId", user.getId());
+                    mContext.startActivity(intent);
                 }
             }
         });
