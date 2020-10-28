@@ -70,7 +70,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-
                     String gg = snapshot.getKey().toString();
                     searchUser(gg);
                 }

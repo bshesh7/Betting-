@@ -1,5 +1,6 @@
 package Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -98,6 +99,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>{
                     Intent intent = new Intent(mContext, MotherProfile.class);
                     intent.putExtra("publisherId", user.getId());
                     mContext.startActivity(intent);
+                    ((Activity)(mContext)).finish();
                 }
             }
         });

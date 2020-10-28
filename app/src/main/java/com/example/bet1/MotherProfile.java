@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import Model.User;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MotherProfile extends AppCompatActivity {
+
     private FirebaseUser firebaseUser;
     TextView mother_name;
     Button enter_guess;
@@ -46,32 +48,36 @@ public class MotherProfile extends AppCompatActivity {
     private List<User> mUsers;
     private GuesserAdapter userAdapter;
     private RecyclerView recyclerView;
+    Button homepage;
 
-
-
-
-    Boolean set_date = false;
+    Boolean set_date = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mother_profile);
 
+        homepage = findViewById(R.id.homepage);
+        homepage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUsers.clear();
+                Intent intent = new Intent(MotherProfile.this,HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
+            }
+        });
         mother_name = findViewById(R.id.mother_name);
         enter_guess = findViewById(R.id.enter_guess);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
         String newString;
         Bundle extras = getIntent().getExtras();
-
         recyclerView = findViewById(R.id.recycler_view_users);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         mUsers = new ArrayList<>();
         userAdapter = new GuesserAdapter(this,mUsers, false);
         recyclerView.setAdapter(userAdapter);
-        readUsers();
-
         if(extras == null) {
             newString= null;
         } else {
@@ -79,28 +85,25 @@ public class MotherProfile extends AppCompatActivity {
             Log.i(newString,"sdsa");
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Mother").child(newString);
             reference.addValueEventListener(new ValueEventListener() {
-
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     user1 = dataSnapshot.getValue(User.class);
                     Log.i("mother name",user1.getName());
                     mother_name.setText(user1.getName());
+                    readUsers();
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
                 }
             });
         }
         enter_guess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Calendar cal = Calendar.getInstance();
+                Calendar cal = Calendar.getInstance();
                 int year = cal.get(Calendar.YEAR);
                 int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
-
                 DatePickerDialog dialog = new DatePickerDialog(
                         MotherProfile.this,
                         android.R.style.Theme_Holo_Light_Dialog_MinWidth,
@@ -133,46 +136,46 @@ public class MotherProfile extends AppCompatActivity {
                             Toast toast = Toast.makeText(context, text, duration);
                             toast.show();
                             //
-                            set_date = true;
+                            set_date = false;
                         }
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
                     }
                 });
                 if (set_date == true) {
                     FirebaseDatabase.getInstance().getReference().child("Guesses").child("mothers").
                             child(user1.getId()).child("guessers").child(firebaseUser.getUid()).child("date").setValue(date);
-                    set_date = false;
+                    set_date = true;
                 }
             }
         };
     }
-
     private void readUsers(){
-        mUsers.clear();
+        //mUsers.clear();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Guesses").child("mothers");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()){
-                        if(user1.getId().equals(snapshot.getKey().toString())){
-                            Log.i("hail","rainy day");
-                            for (DataSnapshot snapshot1: snapshot.getChildren()){
-                                for (DataSnapshot snapshot2: snapshot1.getChildren()){
-                                    String gg = snapshot2.getKey().toString();
-                                    String guessed_date_user = null;
-                                    for (DataSnapshot snapshot3: snapshot2.getChildren()){
-                                        guessed_date_user = snapshot3.getValue().toString();
+                        if(user1 != null) {
+                            if (user1.getId().equals(snapshot.getKey().toString())) {
+                                Log.i("hail", "rainy day");
+                                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                                    for (DataSnapshot snapshot2 : snapshot1.getChildren()) {
+                                        String gg = snapshot2.getKey().toString();
+                                        String guessed_date_user = null;
+                                        for (DataSnapshot snapshot3 : snapshot2.getChildren()) {
+                                            guessed_date_user = snapshot3.getValue().toString();
+                                        }
+                                        Log.i("this followrt", guessed_date_user);
+                                        searchUser(gg, guessed_date_user);
                                     }
-                                    Log.i("this followrt", guessed_date_user);
-                                    searchUser(gg,guessed_date_user);
+
                                 }
 
                             }
-
                         }
                 }
 

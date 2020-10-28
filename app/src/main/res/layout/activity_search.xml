@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,7 +54,11 @@
                 android:layout_below="@+id/recycler_view_users"
                 android:layout_marginTop="5dp"/>
 
-
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Back to homepage"
+                android:id="@+id/homepage"/>
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

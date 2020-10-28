@@ -6,17 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
-    <Button
-        android:id="@+id/search_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="275dp"
-        android:layout_marginBottom="408dp"
-        android:text="Search for Mother"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="174dp"
-        />
 
 
     <LinearLayout
@@ -24,6 +13,17 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:ignore="MissingConstraints">
+
+        <Button
+            android:id="@+id/search_button"
+            android:padding="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Search for Mother"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="174dp"
+            tools:ignore="MissingConstraints" />
 
         <TextView
             android:layout_width="match_parent"
@@ -37,6 +37,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/recycler_view_users"
             android:layout_below="@+id/bar"/>
+
+
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
