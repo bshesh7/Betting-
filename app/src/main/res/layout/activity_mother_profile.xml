@@ -26,6 +26,10 @@
             android:text="Guess Delievery date">
 
         </Button>
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recycler_view_users"
+            android:layout_below="@+id/bar"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

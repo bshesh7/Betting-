@@ -21,6 +21,7 @@ public class User {
         this.imageurl = imageurl;
         this.id = id;
         this.isMother = isMother;
+        this.Guessed_date= date;
     }
 
     public String getName() {
@@ -31,7 +32,7 @@ public class User {
         this.name = name;
     }
     public void setDate(String date) {
-        this.Guessed_date = Guessed_date;
+        this.Guessed_date = date;
     }
 
     public String getEmail() {
@@ -81,4 +82,5 @@ public class User {
     public String getDate() {
         return Guessed_date;
     }
+
 }
