@@ -49,13 +49,14 @@ public class MotherProfile extends AppCompatActivity {
     private GuesserAdapter userAdapter;
     private RecyclerView recyclerView;
     Button homepage;
+    TextView text_end_game;
 
     Boolean set_date = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mother_profile);
-
+        text_end_game = findViewById(R.id.text_end_game);
         homepage = findViewById(R.id.homepage);
         homepage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,12 +92,36 @@ public class MotherProfile extends AppCompatActivity {
                     Log.i("mother name",user1.getName());
                     mother_name.setText(user1.getName());
                     readUsers();
+                    DatabaseReference reference_3 = FirebaseDatabase.getInstance().getReference().child("EndGame").child("mothers").child((user1.getId()));
+                    reference_3.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists())
+                            {
+                                 text_end_game.setVisibility(View.VISIBLE);
+                                enter_guess.setVisibility(View.GONE);
+                            }else{
+                                text_end_game.setText("Game is still on");
+                                text_end_game.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                 }
             });
         }
+        //
+
+
+        //
+
         enter_guess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -151,6 +176,8 @@ public class MotherProfile extends AppCompatActivity {
                 }
             }
         };
+
+
     }
     private void readUsers(){
         //mUsers.clear();

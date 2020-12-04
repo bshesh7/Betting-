@@ -25,6 +25,39 @@
             tools:layout_editor_absoluteX="174dp"
             tools:ignore="MissingConstraints" />
 
+        <Button
+            android:id="@+id/end_game"
+            android:padding="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="END GAME"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="174dp"
+            tools:ignore="MissingConstraints"
+            android:visibility="gone"/>
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="You have ended the game. Your actual delievery date was"
+                android:textSize="30sp"
+                android:visibility="gone"
+                android:id="@+id/text_end_game"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/actual_date"
+                android:text="."/>
+
+
+
+
+
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

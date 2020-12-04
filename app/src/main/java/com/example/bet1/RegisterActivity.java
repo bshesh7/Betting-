@@ -74,6 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         pd = new ProgressDialog(this);
 
+
         //Starts login activity
         loginUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,57 +132,58 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             private void registerUser(final String username, final String name, final String email,final String password) {
-
+                Boolean isEmail = true;
+                isEmail = email.matches("[a-zA-Z0-9\\.]+@[a-zA-Z0-9\\-\\_\\.]+\\.[a-zA-Z0-9]{3}");
                 pd.setMessage("Please wait");
                 pd.show();
 
-                mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        HashMap<String, Object> map = new HashMap<>();
-                        map.put("name",name);
-                        map.put("email",email);
-                        map.put("username",username);
-                        map.put("id",mAuth.getCurrentUser().getUid());
-                        map.put("isMother",isMother);
-                        map.put("imageurl", "defaut");
+                    mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            HashMap<String, Object> map = new HashMap<>();
+                            map.put("name", name);
+                            map.put("email", email);
+                            map.put("username", username);
+                            map.put("id", mAuth.getCurrentUser().getUid());
+                            map.put("isMother", isMother);
+                            map.put("imageurl", "defaut");
 
-                        if(isMother.equals("Mother")){
-                            mRootRef.child("Mother").child(mAuth.getCurrentUser().getUid()).setValue(map);
-                            FirebaseDatabase.getInstance().getReference().child("Date").
-                                    child(mAuth.getCurrentUser().getUid()).setValue(date);
+                            if (isMother.equals("Mother")) {
+                                mRootRef.child("Mother").child(mAuth.getCurrentUser().getUid()).setValue(map);
+                                FirebaseDatabase.getInstance().getReference().child("Date").
+                                        child(mAuth.getCurrentUser().getUid()).setValue(date);
 
-                        }
-
-                        mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful()){
-                                    pd.dismiss();
-                                    Toast.makeText(RegisterActivity.this,"Update profile" +
-                                            " for better experience",Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(RegisterActivity.this,HomeActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivity(intent);
-                                    finish();
-                                }
                             }
-                        });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        pd.dismiss();
-                        Toast.makeText(RegisterActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-                    }
-                });
+
+                            mRootRef.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        pd.dismiss();
+                                        Toast.makeText(RegisterActivity.this, "Update profile" +
+                                                " for better experience", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                }
+                            });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            pd.dismiss();
+                            Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
 
             }
         });
     }
     public void checkButton(View v) {
-        int radioId = radioGroup.getCheckedRadioButtonId();
+            int radioId = radioGroup.getCheckedRadioButtonId();
         radioButton = findViewById(radioId);
         Toast.makeText(this, "Selected Radio Button: " + radioButton.getText(),
                 Toast.LENGTH_SHORT).show();
